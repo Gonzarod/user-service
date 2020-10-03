@@ -34,6 +34,8 @@ public class DataLoader {
 
     private void LoadData() {
 
+
+
         this.roleRepository.saveAll(List.of(new Role(ERole.ROLE_STUDENT),
                                             new Role(ERole.ROLE_TEACHER),
                                             new Role(ERole.ROLE_ADMIN)));
