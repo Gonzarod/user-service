@@ -14,10 +14,6 @@
     <name>user-service</name>
     <description>User microservice for Tutofast application</description>
 
-    <properties>
-        <java.version>11</java.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
