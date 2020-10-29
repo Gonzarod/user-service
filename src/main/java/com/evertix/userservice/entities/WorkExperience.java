@@ -1,8 +1,6 @@
 package com.evertix.userservice.entities;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -14,8 +12,8 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "work_experiences")
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 @NoArgsConstructor
 public class WorkExperience extends AuditModel {
 

@@ -1,8 +1,6 @@
 package com.evertix.userservice.controller;
 
 import com.evertix.userservice.entities.User;
-import com.evertix.userservice.resource.UserResource;
-import com.evertix.userservice.resource.UserSaveResource;
 import com.evertix.userservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,32 +9,32 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Tag(name = "User", description = "API")
 @RestController
-@RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping("/api/users")
+@CrossOrigin(origins = "*")
 public class UserController {
-    @Autowired
-    private ModelMapper mapper;
+
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/users")
-    @Operation(summary = "Get All Users", description = "Get All Users", tags = {"User"},
+    @GetMapping("/")
+    @Operation(summary = "Get All Users", description = "Get All Users", tags = {"User"})
+    public List<User> getAllUsers(){
+        return this.userService.getAllUsers();
+    }
+
+    @GetMapping("/page")
+    @Operation(summary = "Get All Users Page", description = "Get All Users Page", tags = {"User"},
             parameters = {
                     @Parameter(in = ParameterIn.QUERY
                             , description = "Page you want to retrieve (0..N)"
@@ -52,13 +50,15 @@ public class UserController {
                             , name = "sort"
                             , content = @Content(array = @ArraySchema(schema = @Schema(type = "string"))))
             })
-    public Page<UserResource> getAllUsers(@PageableDefault @Parameter(hidden = true) Pageable pageable){
-        Page<User> userPage = userService.getAllUsers(pageable);
-        List<UserResource> resources = userPage.getContent().stream().map(this::convertToResource).collect(Collectors.toList());
-        return new PageImpl<>(resources,pageable,userPage.getTotalElements());
-
+    public Page<User> getAllUsers(@PageableDefault @Parameter(hidden = true) Pageable pageable){
+        return this.userService.getAllUsersPage(pageable);
     }
 
-    private User convertToEntity(UserSaveResource resource){return mapper.map(resource, User.class);}
-    private UserResource convertToResource(User entity){return mapper.map(entity, UserResource.class);}
+    @GetMapping("/username/{username}")
+    @Operation(summary = "Get All Users by Username", description = "Get All Users by Username", tags = {"User"})
+    public User getAllUsers(@PathVariable String username){
+        return this.userService.getUserByUsername(username);
+    }
+
+
 }

@@ -7,8 +7,10 @@ import com.evertix.userservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -16,15 +18,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    /*
     @Override
-    public Page<User> getAllUsersByCourseId(Long courseId, Pageable pageable) {
-        return userRepository.findAllByCoursesId(courseId, pageable);
+    public List<User> getAllUsers() {
+        return this.userRepository.findAll();
     }
-    */
 
     @Override
-    public Page<User> getAllUsers(Pageable pageable) {
+    public Page<User> getAllUsersPage(Pageable pageable) {
         return this.userRepository.findAll(pageable);
     }
 
@@ -35,16 +35,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByUsername(String username) {
+        return this.userRepository.findByUsername(username).orElseThrow(()->new ResourceNotFoundException("User with username: "+username+" not found"));
+    }
+/*
+    @Override
     public User updateUser(Long userId, User userDetails) {
         return userRepository.findById(userId).map(user -> {
             user.setUsername(userDetails.getUsername());
-            user.setPassword(userDetails.getPassword());
             user.setName(userDetails.getName());
             user.setLastName(userDetails.getLastName());
             user.setBirthday(userDetails.getBirthday());
             user.setPhone(userDetails.getPhone());
             user.setAddress(userDetails.getAddress());
-            user.setTotalStar(userDetails.getTotalStar());
             user.setActive(userDetails.getActive());
             user.setLinkedin(userDetails.getLinkedin());
             return userRepository.save(user);
@@ -58,4 +61,6 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.ok().build();
         }).orElseThrow(()-> new ResourceNotFoundException("User with Id: "+userId+" not found"));
     }
+
+ */
 }

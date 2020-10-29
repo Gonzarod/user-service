@@ -1,5 +1,6 @@
 package com.evertix.userservice.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -7,11 +8,12 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 
 @Entity
 @Table(name="users",
@@ -19,15 +21,14 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email")
         })
-@Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
+@Getter
+@Setter
 public class User extends AuditModel{
 
-    public User(String username, String password, String email, String name,
+    public User(String username, String email, String name,
                 String lastName, String dni, String phone, LocalDate birthday, String address) {
         this.username = username;
-        this.password = password;
         this.email = email;
         this.name = name;
         this.lastName = lastName;
@@ -35,22 +36,18 @@ public class User extends AuditModel{
         this.phone = phone;
         this.birthday = birthday;
         this.address = address;
+        this.courses=new ArrayList<>();
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(unique = true)
     @NotNull(message = "Username cannot be null")
     @NotBlank(message = "Username cannot be blank")
     @Size(max = 30,message = "Username name must be less than 30 characters")
     private String username;
-
-    @NotNull(message = "Password cannot be null")
-    @NotBlank(message = "Password cannot be blank")
-    @Size(max = 120,message = "Password must be less than 120 characters")
-    private String password;
 
     @Column(unique = true)
     @NotNull(message = "Email cannot be null")
@@ -59,7 +56,7 @@ public class User extends AuditModel{
     @Size(max = 100)
     private String email;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -81,7 +78,6 @@ public class User extends AuditModel{
     @Size(max = 10, min = 8)
     private String dni;
 
-    @Column(unique = true)
     @NotNull(message = "Phone cannot be null")
     @NotBlank(message = "Phone cannot be blank")
     @Size(max = 12, min = 9)
@@ -95,14 +91,26 @@ public class User extends AuditModel{
     @Size(max = 150)
     private String address;
 
-    private int totalStar;
+    private Boolean banned;
 
+    private Short creditHours;
+
+    //Additional attribute for Student User (elementary, college, etc)
+    private String educationalStage;
+
+    //Additional attribute for Teacher User
+    private BigDecimal averageStars;
+
+    //Additional attribute for Teacher User
     private Boolean active;
 
+    //Additional attribute for Teacher User
     private String linkedin;
 
+    //Additional attribute for Teacher User
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "assignations",
             joinColumns = {@JoinColumn(name = "teacher_id")}, inverseJoinColumns = {@JoinColumn(name = "course_id")})
     private List<Course> courses;
 }
+

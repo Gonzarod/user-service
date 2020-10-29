@@ -11,20 +11,16 @@ import java.util.List;
 
 @Entity
 @Table(name = "courses")
-@Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
+@Getter
+@Setter
 public class Course extends AuditModel{
-
-    public Course(String name, String description){
-        this.name = name;
-        this.description = description;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(unique = true)
     @NotNull(message = "Name cannot be null")
     @NotBlank(message = "Name cannot be blank")
     @Size(max = 35)
@@ -38,4 +34,9 @@ public class Course extends AuditModel{
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "courses")
     @JsonIgnore
     private List<User> teachers;
+
+    public Course(String name, String description) {
+        this.name=name;
+        this.description=description;
+    }
 }

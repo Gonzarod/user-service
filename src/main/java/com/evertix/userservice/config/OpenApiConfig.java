@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
 public class OpenApiConfig {
     @Bean(name = "tutofastOpenApi")
     public OpenAPI tutofastOpenApi() {
-        // Available at
-        // http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config
+        // Swagger UI available at:
+        // http://localhost:8080/swagger-ui.html
         return new OpenAPI()
                 .components(new Components())
                 .info(new Info().title("TutoFast User Service API Documentation").description(

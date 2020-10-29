@@ -24,6 +24,6 @@ public abstract class AuditModel implements Serializable {
 
     @Column(nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
+    @CreatedDate
     private Date updatedAt;
 }

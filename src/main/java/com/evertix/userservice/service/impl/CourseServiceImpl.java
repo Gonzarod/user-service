@@ -10,16 +10,50 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 public class CourseServiceImpl implements CourseService {
     @Autowired
     private CourseRepository courseRepository;
 
     @Override
-    public Page<Course> getAllCourses(Pageable pageable) { return courseRepository.findAll(pageable); }
+    public List<Course> getAllCourses(String name) {
+        //Course name is optional
+        if (name==null){
+            return this.courseRepository.findAll();
+        }else{
+            return this.courseRepository.findAllByNameContains(name);
+        }
+    }
 
     @Override
-    public Course getCourseByName(String courseName) { return courseRepository.findByName(courseName); }
+    public Page<Course> getAllCoursesPage(String name,Pageable pageable) {
+
+        //Course name is optional
+        if (name==null){
+            return this.courseRepository.findAll(pageable);
+        }else{
+            return this.courseRepository.findAllByNameContains(name,pageable);
+        }
+
+    }
+
+    @Override
+    public Course getCourseById(Long courseId) {
+        return this.courseRepository.findById(courseId)
+                .orElseThrow(()->new ResourceNotFoundException("Course with id:"+courseId+" not found"));
+    }
+
+    @Override
+    public Course getCourseByName(String courseName) {
+        return courseRepository.findByNameEquals(courseName)
+            .orElseThrow(()-> new ResourceNotFoundException("Course with name: "+courseName+" not found."));
+    }
+
+/*
 
     @Override
     public Course createCourse(Course course) { return courseRepository.save(course); }
@@ -40,4 +74,6 @@ public class CourseServiceImpl implements CourseService {
             return ResponseEntity.ok().build();
         }).orElseThrow(()-> new ResourceNotFoundException("Course with Id: "+courseId+ " not found"));
     }
+    */
+
 }
