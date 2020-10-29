@@ -60,5 +60,11 @@ public class UserController {
         return this.userService.getUserByUsername(username);
     }
 
+    @GetMapping("/{userId}")
+    @Operation(summary = "Get All Users by Id", description = "Get All Users by Id", tags = {"User"})
+    public User getAllUsers(@PathVariable Long userId){
+        return this.userService.getUserById(userId);
+    }
+
 
 }
