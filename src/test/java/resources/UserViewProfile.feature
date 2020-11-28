@@ -1,13 +1,13 @@
 Feature:  Users Can View Profile
   Scenario: User Student successfully view his profile
     Given Student with a username "jesus.student"
-    When makes go to profile option and call to api is made
+    When go to profile option and call to api is made
     Then response status is 200
     And all student data is retrieved
 
   Scenario: User Teacher successfully view his profile
     Given Teacher with a username "albert.teacher"
-    When makes go to profile option and call to api is made
+    When go to profile option and call to api is made
     Then response status is 200
     And all teacher data is retrieved
 
