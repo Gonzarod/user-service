@@ -51,12 +51,6 @@ public class UserViewProfileStepdefs {
 
     }
 
-    @When("makes go to profile option and call to api is made")
-    public void makesGoToProfileOptionAndCallToApiIsMade() {
-        HttpHeaders headers = new HttpHeaders();
-        HttpEntity<?> request = new HttpEntity<>(headers);
-        this.userResponse = template.exchange(base+"/users/username/"+username, HttpMethod.GET,request,User.class);
-    }
 
     @Then("response status is {int}")
     public void responseStatusIs(int arg0) {
@@ -104,5 +98,12 @@ public class UserViewProfileStepdefs {
     @Then("response status of request is {int}")
     public void responseStatusOfRequestIs(int arg0) {
         Assert.assertEquals(listResponseEntity.getStatusCodeValue(),200,listResponseEntity.getStatusCodeValue());
+    }
+
+    @When("go to profile option and call to api is made")
+    public void goToProfileOptionAndCallToApiIsMade() {
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<?> request = new HttpEntity<>(headers);
+        this.userResponse = template.exchange(base+"/users/username/"+username, HttpMethod.GET,request,User.class);
     }
 }
